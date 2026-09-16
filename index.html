@@ -1,1 +1,1625 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Rastgele kediler. Sadece bir kedi.">
 
+<title>CAT — Sadece bir kedi.</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+    --black:#000;
+    --white:#fff;
+    --gray:#86868b;
+    --light:#f5f5f7;
+    --border:rgba(255,255,255,.11);
+    --ease:cubic-bezier(.2,.8,.2,1);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",Arial,sans-serif;
+    background:#000;
+    color:#fff;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+}
+
+body.modal-open{
+    overflow:hidden;
+}
+
+button{
+    font:inherit;
+}
+
+img{
+    max-width:100%;
+}
+
+a{
+    color:inherit;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:52px;
+    z-index:1000;
+
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.nav-inner{
+    width:min(1080px,calc(100% - 40px));
+    height:100%;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:-.8px;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:32px;
+    list-style:none;
+}
+
+.nav-links a{
+    color:#a1a1a6;
+    text-decoration:none;
+    font-size:12px;
+    transition:color .25s ease;
+}
+
+.nav-links a:hover{
+    color:#fff;
+}
+
+.saved{
+    color:#86868b;
+    font-size:12px;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    position:relative;
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#000;
+}
+
+.hero-glow{
+    position:absolute;
+    width:700px;
+    height:700px;
+    left:50%;
+    top:46%;
+    transform:translate(-50%,-50%);
+
+    background:radial-gradient(
+        circle,
+        rgba(255,255,255,.075) 0%,
+        rgba(255,255,255,.025) 35%,
+        transparent 70%
+    );
+
+    pointer-events:none;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:80px 20px 40px;
+}
+
+.eyebrow{
+    margin-bottom:22px;
+    color:#86868b;
+    font-size:13px;
+    letter-spacing:.02em;
+}
+
+.hero h1{
+    font-size:clamp(68px,11vw,155px);
+    line-height:.88;
+    font-weight:600;
+    letter-spacing:-7px;
+}
+
+.hero-description{
+    margin-top:30px;
+    color:#a1a1a6;
+    font-size:18px;
+    line-height:1.5;
+}
+
+.hero-small{
+    margin-top:9px;
+    color:#5f5f63;
+    font-size:13px;
+}
+
+.scroll{
+    position:absolute;
+    bottom:32px;
+    left:50%;
+    transform:translateX(-50%);
+
+    color:#666;
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+/* =========================
+   WHITE INTRO
+========================= */
+
+.intro{
+    min-height:78svh;
+    background:#fff;
+    color:#000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+    padding:130px 25px;
+}
+
+.intro-inner{
+    max-width:950px;
+}
+
+.intro .eyebrow{
+    color:#6e6e73;
+}
+
+.intro h2{
+    font-size:clamp(48px,7vw,94px);
+    line-height:.96;
+    letter-spacing:-5px;
+    font-weight:600;
+}
+
+.intro p{
+    margin-top:30px;
+    color:#6e6e73;
+    font-size:18px;
+}
+
+/* =========================
+   SECTION HEAD
+========================= */
+
+.section{
+    padding:150px 20px;
+    background:#000;
+}
+
+.section-head{
+    width:min(900px,100%);
+    margin:0 auto 65px;
+    text-align:center;
+}
+
+.section-head h2{
+    font-size:clamp(46px,7vw,82px);
+    line-height:.96;
+    letter-spacing:-4px;
+    font-weight:600;
+}
+
+.section-head p{
+    margin-top:23px;
+    color:#86868b;
+    font-size:17px;
+}
+
+/* =========================
+   CAT DISPLAY
+========================= */
+
+.cat-container{
+    width:min(1180px,100%);
+    margin:auto;
+}
+
+.cat-frame{
+    position:relative;
+    overflow:hidden;
+
+    border-radius:30px;
+    background:#111;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.55),
+        0 0 0 1px rgba(255,255,255,.07);
+}
+
+.cat-image{
+    width:100%;
+    aspect-ratio:3/2;
+    display:block;
+
+    object-fit:cover;
+
+    background:#111;
+
+    transition:opacity .3s ease;
+}
+
+.cat-loading{
+    position:absolute;
+    inset:0;
+    z-index:2;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#111;
+
+    opacity:1;
+    transition:opacity .35s ease;
+}
+
+.cat-loading.hide{
+    opacity:0;
+    pointer-events:none;
+}
+
+.spinner{
+    width:24px;
+    height:24px;
+
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,.15);
+    border-top-color:#fff;
+
+    animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.cat-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+
+    margin-top:18px;
+}
+
+.cat-number{
+    color:#6e6e73;
+    font-size:12px;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.btn{
+    appearance:none;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:#fff;
+
+    padding:11px 17px;
+    border-radius:999px;
+
+    font-size:12px;
+    cursor:pointer;
+
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        border-color .25s ease;
+}
+
+.btn:hover{
+    background:rgba(255,255,255,.12);
+    border-color:rgba(255,255,255,.2);
+    transform:translateY(-1px);
+}
+
+.btn:active{
+    transform:scale(.97);
+}
+
+/* =========================
+   CINEMATIC DISCOVER
+========================= */
+
+.discover{
+    min-height:90svh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:130px 25px;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            #171717 0%,
+            #080808 30%,
+            #000 68%
+        );
+}
+
+.discover h2{
+    font-size:clamp(58px,9vw,120px);
+    line-height:.9;
+    letter-spacing:-6px;
+    font-weight:600;
+}
+
+.discover p{
+    margin-top:27px;
+    color:#86868b;
+    font-size:17px;
+}
+
+.primary{
+    margin-top:34px;
+
+    border:0;
+    background:#fff;
+    color:#000;
+
+    padding:14px 24px;
+    border-radius:999px;
+
+    font-size:13px;
+    font-weight:500;
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        background .25s ease;
+}
+
+.primary:hover{
+    transform:scale(1.035);
+    background:#f2f2f2;
+}
+
+.primary:active{
+    transform:scale(.97);
+}
+
+/* =========================
+   GALLERY
+========================= */
+
+.gallery{
+    padding:0 20px 150px;
+    background:#000;
+}
+
+.gallery-grid{
+    width:min(1180px,100%);
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.gallery-card{
+    position:relative;
+    overflow:hidden;
+    border-radius:26px;
+    background:#111;
+}
+
+.gallery-card img{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    display:block;
+
+    transition:transform 1s var(--ease);
+}
+
+.gallery-card:hover img{
+    transform:scale(1.035);
+}
+
+/* =========================
+   COLLECTION
+========================= */
+
+.collection{
+    background:#f5f5f7;
+    color:#000;
+    padding:150px 25px;
+}
+
+.collection-inner{
+    width:min(1100px,100%);
+    margin:auto;
+}
+
+.collection .eyebrow{
+    color:#6e6e73;
+}
+
+.collection h2{
+    font-size:clamp(48px,7vw,82px);
+    letter-spacing:-4px;
+    line-height:.95;
+}
+
+.collection-description{
+    margin-top:20px;
+    color:#6e6e73;
+    font-size:17px;
+}
+
+.collection-grid{
+    margin-top:65px;
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.collection-card{
+    overflow:hidden;
+    border-radius:22px;
+    background:#fff;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.06);
+}
+
+.collection-card img{
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+}
+
+.empty{
+    margin-top:60px;
+    padding:70px 20px;
+
+    text-align:center;
+
+    border-radius:25px;
+    background:rgba(0,0,0,.035);
+
+    color:#86868b;
+    font-size:14px;
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final{
+    position:relative;
+    min-height:100svh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:100px 25px;
+
+    background:#000;
+    overflow:hidden;
+}
+
+.final::before{
+    content:"";
+    position:absolute;
+
+    width:650px;
+    height:650px;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:radial-gradient(
+        circle,
+        rgba(255,255,255,.06),
+        transparent 68%
+    );
+
+    pointer-events:none;
+}
+
+.final-content{
+    position:relative;
+    z-index:1;
+}
+
+.final h2{
+    font-size:clamp(58px,8vw,112px);
+    line-height:.91;
+    letter-spacing:-6px;
+    font-weight:600;
+}
+
+.final p{
+    margin-top:27px;
+    color:#86868b;
+    font-size:17px;
+}
+
+/* =========================
+   ELA MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(0,0,0,.94);
+
+    backdrop-filter:blur(30px) saturate(130%);
+    -webkit-backdrop-filter:blur(30px) saturate(130%);
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
+}
+
+.modal.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-content{
+    text-align:center;
+
+    transform:translateY(20px) scale(.97);
+
+    transition:
+        transform .65s var(--ease);
+}
+
+.modal.active .modal-content{
+    transform:translateY(0) scale(1);
+}
+
+.avatar-wrap{
+    position:relative;
+
+    width:230px;
+    height:230px;
+
+    margin:auto;
+
+    border-radius:50%;
+    overflow:hidden;
+
+    background:#111;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.13),
+        0 30px 100px rgba(0,0,0,.65);
+}
+
+.avatar{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    display:block;
+}
+
+.avatar-loader{
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#111;
+}
+
+.avatar-loader.hidden{
+    display:none;
+}
+
+.avatar-error{
+    display:none;
+
+    position:absolute;
+    inset:0;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:30px;
+
+    text-align:center;
+
+    color:#777;
+    font-size:11px;
+}
+
+.avatar-error.show{
+    display:flex;
+}
+
+.name{
+    margin-top:30px;
+
+    font-size:36px;
+    font-weight:500;
+
+    letter-spacing:-1.5px;
+}
+
+.subtitle{
+    margin-top:9px;
+
+    color:#86868b;
+    font-size:16px;
+}
+
+.line{
+    width:36px;
+    height:1px;
+
+    margin:34px auto 0;
+
+    background:rgba(255,255,255,.25);
+}
+
+.close{
+    position:absolute;
+    top:25px;
+    right:25px;
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.13);
+    background:rgba(255,255,255,.07);
+
+    color:#fff;
+
+    font-size:20px;
+    font-weight:300;
+
+    cursor:pointer;
+
+    transition:
+        background .25s ease,
+        transform .25s ease;
+}
+
+.close:hover{
+    background:rgba(255,255,255,.14);
+    transform:rotate(90deg);
+}
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(28px);
+
+    transition:
+        opacity .8s ease,
+        transform .8s var(--ease);
+}
+
+.reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    padding:50px 25px;
+
+    background:#000;
+
+    color:#555;
+
+    text-align:center;
+
+    font-size:11px;
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    .nav-inner{
+        width:calc(100% - 30px);
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero-content{
+        padding-top:70px;
+    }
+
+    .hero h1{
+        letter-spacing:-4px;
+    }
+
+    .hero-description{
+        font-size:16px;
+    }
+
+    .intro{
+        min-height:70svh;
+        padding:100px 20px;
+    }
+
+    .intro h2{
+        letter-spacing:-3px;
+    }
+
+    .section{
+        padding:100px 15px;
+    }
+
+    .section-head{
+        margin-bottom:45px;
+    }
+
+    .section-head h2{
+        letter-spacing:-3px;
+    }
+
+    .cat-frame{
+        border-radius:20px;
+    }
+
+    .cat-bar{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .actions{
+        width:100%;
+        justify-content:flex-start;
+    }
+
+    .btn{
+        flex:1;
+    }
+
+    .gallery{
+        padding:0 15px 100px;
+    }
+
+    .gallery-grid{
+        grid-template-columns:1fr;
+        gap:14px;
+    }
+
+    .gallery-card{
+        border-radius:20px;
+    }
+
+    .collection{
+        padding:100px 20px;
+    }
+
+    .collection h2{
+        letter-spacing:-3px;
+    }
+
+    .collection-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .collection-card{
+        border-radius:17px;
+    }
+
+    .final h2{
+        letter-spacing:-4px;
+    }
+
+    .avatar-wrap{
+        width:185px;
+        height:185px;
+    }
+
+    .name{
+        font-size:31px;
+    }
+
+    .close{
+        top:18px;
+        right:18px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+
+<nav class="nav">
+    <div class="nav-inner">
+
+        <div class="logo">CAT</div>
+
+        <ul class="nav-links">
+            <li><a href="#kesfet">Keşfet</a></li>
+            <li><a href="#galeri">Galeri</a></li>
+            <li><a href="#koleksiyon">Koleksiyon</a></li>
+        </ul>
+
+        <div class="saved">
+            <span id="savedCount">0</span> kayıt
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-glow"></div>
+
+    <div class="hero-content reveal">
+
+        <div class="eyebrow">
+            Rastgele · Sonsuz · Farklı
+        </div>
+
+        <h1>
+            Sadece<br>
+            bir kedi.
+        </h1>
+
+        <div class="hero-description">
+            Sen seçmedin.<br>
+            O sadece karşına çıktı.
+        </div>
+
+        <div class="hero-small">
+            Her seferinde başka bir hikâye.
+        </div>
+
+    </div>
+
+    <div class="scroll">
+        Aşağı kaydır
+    </div>
+
+</section>
+
+
+<!-- INTRO -->
+
+<section class="intro">
+
+    <div class="intro-inner reveal">
+
+        <div class="eyebrow">
+            Gereğinden fazlası yok.
+        </div>
+
+        <h2>
+            İsim yok.<br>
+            Hikâye yok.<br>
+            Sadece bir kedi.
+        </h2>
+
+        <p>
+            Bazen hiçbir şeyi açıklamaya gerek yoktur.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- DISCOVER CAT -->
+
+<section class="section" id="kesfet">
+
+    <div class="section-head reveal">
+
+        <div class="eyebrow">
+            Keşfet
+        </div>
+
+        <h2>
+            Karşına ne çıkacak?
+        </h2>
+
+        <p>
+            Tamamen rastgele. Her seferinde farklı.
+        </p>
+
+    </div>
+
+    <div class="cat-container">
+
+        <div class="cat-frame">
+
+            <div class="cat-loading" id="catLoading">
+                <div class="spinner"></div>
+            </div>
+
+            <img
+                id="mainCat"
+                class="cat-image"
+                alt="Rastgele kedi"
+                decoding="async"
+            >
+
+        </div>
+
+        <div class="cat-bar">
+
+            <div class="cat-number">
+                Kedi <span id="catNumber">01</span>
+            </div>
+
+            <div class="actions">
+
+                <button class="btn" id="saveBtn">
+                    Kaydet
+                </button>
+
+                <button class="btn" id="fullscreenBtn">
+                    Tam ekran
+                </button>
+
+                <button class="btn" id="nextBtn">
+                    Yeni kedi
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- DISCOVER -->
+
+<section class="discover">
+
+    <div class="reveal">
+
+        <div class="eyebrow">
+            Sonsuz olasılık
+        </div>
+
+        <h2>
+            Sırada<br>
+            ne var?
+        </h2>
+
+        <p>
+            Bir sonraki kediyi görmek için devam et.
+        </p>
+
+        <button class="primary" id="discoverBtn">
+            Başka bir kedi keşfet
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- GALLERY -->
+
+<section class="gallery" id="galeri">
+
+    <div class="gallery-grid">
+
+        <div class="gallery-card reveal">
+            <img
+                src="https://cataas.com/cat?width=1400&height=1400"
+                alt="Kedi"
+                loading="lazy"
+                decoding="async"
+            >
+        </div>
+
+        <div class="gallery-card reveal">
+            <img
+                src="https://cataas.com/cat?width=1400&height=1400"
+                alt="Kedi"
+                loading="lazy"
+                decoding="async"
+            >
+        </div>
+
+        <div class="gallery-card reveal">
+            <img
+                src="https://cataas.com/cat?width=1400&height=1400"
+                alt="Kedi"
+                loading="lazy"
+                decoding="async"
+            >
+        </div>
+
+        <div class="gallery-card reveal">
+            <img
+                src="https://cataas.com/cat?width=1400&height=1400"
+                alt="Kedi"
+                loading="lazy"
+                decoding="async"
+            >
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- COLLECTION -->
+
+<section class="collection" id="koleksiyon">
+
+    <div class="collection-inner">
+
+        <div class="reveal">
+
+            <div class="eyebrow">
+                Senin koleksiyonun
+            </div>
+
+            <h2>
+                Kaydettiklerin.
+            </h2>
+
+            <p class="collection-description">
+                Beğendiğin kediler burada saklanır.
+            </p>
+
+        </div>
+
+        <div id="emptyCollection" class="empty">
+            Henüz bir kedi kaydetmedin.
+        </div>
+
+        <div
+            id="collectionGrid"
+            class="collection-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL -->
+
+<section class="final">
+
+    <div class="final-content reveal">
+
+        <div class="eyebrow">
+            Son bir şey
+        </div>
+
+        <h2>
+            Benim tercih<br>
+            ettiğim kedi.
+        </h2>
+
+        <p>
+            Bazı tercihler gerçekten kolaydır.
+        </p>
+
+        <button class="primary" id="showElaBtn">
+            Kediyi Gör
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ELA -->
+
+<div class="modal" id="elaModal">
+
+    <button class="close" id="closeModal" aria-label="Kapat">
+        ×
+    </button>
+
+    <div class="modal-content">
+
+        <div class="avatar-wrap">
+
+            <div class="avatar-loader" id="avatarLoader">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="avatar-error" id="avatarError">
+                Fotoğraf yüklenemedi.<br>
+                `images/IMG_4941.png` dosyasını kontrol et.
+            </div>
+
+            <img
+                id="elaAvatar"
+                class="avatar"
+                src="./images/IMG_4941.png"
+                alt="Ela"
+                decoding="async"
+            >
+
+        </div>
+
+        <div class="name">
+            Ela
+        </div>
+
+        <div class="subtitle">
+            En iyi tercihtir.
+        </div>
+
+        <div class="line"></div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    © 2026 CAT — Sadece bir kedi.
+</footer>
+
+
+<script>
+
+/* =========================
+   RASTGELE KEDİ SİSTEMİ
+========================= */
+
+const mainCat = document.getElementById("mainCat");
+const catLoading = document.getElementById("catLoading");
+const nextBtn = document.getElementById("nextBtn");
+const discoverBtn = document.getElementById("discoverBtn");
+const saveBtn = document.getElementById("saveBtn");
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+const catNumber = document.getElementById("catNumber");
+
+let currentCat = "";
+let catIndex = 1;
+
+function loadCat(){
+
+    catLoading.classList.remove("hide");
+
+    const image = new Image();
+
+    const url =
+        "https://cataas.com/cat?width=2400&height=1600&cache=" +
+        Date.now();
+
+    image.onload = function(){
+
+        mainCat.src = image.src;
+        currentCat = image.src;
+
+        requestAnimationFrame(() => {
+            catLoading.classList.add("hide");
+        });
+
+    };
+
+    image.onerror = function(){
+
+        catLoading.classList.add("hide");
+
+    };
+
+    image.src = url;
+}
+
+function nextCat(){
+
+    catIndex++;
+
+    catNumber.textContent =
+        String(catIndex).padStart(2,"0");
+
+    loadCat();
+
+}
+
+nextBtn.addEventListener("click",nextCat);
+
+discoverBtn.addEventListener("click",()=>{
+
+    document
+        .getElementById("kesfet")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+    window.setTimeout(nextCat,650);
+
+});
+
+
+/* =========================
+   KOLEKSİYON
+========================= */
+
+let savedCats = [];
+
+try{
+
+    savedCats =
+        JSON.parse(
+            localStorage.getItem("catCollection")
+        ) || [];
+
+}catch{
+
+    savedCats = [];
+
+}
+
+const collectionGrid =
+    document.getElementById("collectionGrid");
+
+const emptyCollection =
+    document.getElementById("emptyCollection");
+
+const savedCount =
+    document.getElementById("savedCount");
+
+function updateSaved(){
+
+    savedCount.textContent =
+        savedCats.length;
+
+}
+
+function renderCollection(){
+
+    collectionGrid.innerHTML = "";
+
+    if(savedCats.length === 0){
+
+        emptyCollection.style.display = "block";
+        return;
+
+    }
+
+    emptyCollection.style.display = "none";
+
+    const fragment =
+        document.createDocumentFragment();
+
+    savedCats.forEach(src=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "collection-card";
+
+        const img =
+            document.createElement("img");
+
+        img.src = src;
+        img.alt = "Kaydedilmiş kedi";
+        img.loading = "lazy";
+        img.decoding = "async";
+
+        card.appendChild(img);
+        fragment.appendChild(card);
+
+    });
+
+    collectionGrid.appendChild(fragment);
+
+}
+
+saveBtn.addEventListener("click",()=>{
+
+    if(!currentCat)
+        return;
+
+    if(savedCats.includes(currentCat)){
+
+        saveBtn.textContent =
+            "Zaten kayıtlı";
+
+        setTimeout(()=>{
+            saveBtn.textContent =
+                "Kaydet";
+        },1200);
+
+        return;
+
+    }
+
+    savedCats.push(currentCat);
+
+    try{
+
+        localStorage.setItem(
+            "catCollection",
+            JSON.stringify(savedCats)
+        );
+
+    }catch{}
+
+    updateSaved();
+    renderCollection();
+
+    saveBtn.textContent =
+        "Kaydedildi";
+
+    setTimeout(()=>{
+        saveBtn.textContent =
+            "Kaydet";
+    },1300);
+
+});
+
+
+/* =========================
+   TAM EKRAN
+========================= */
+
+fullscreenBtn.addEventListener("click",()=>{
+
+    if(!mainCat.src)
+        return;
+
+    if(mainCat.requestFullscreen){
+
+        mainCat.requestFullscreen();
+
+    }
+
+});
+
+
+/* =========================
+   ELA
+========================= */
+
+const elaModal =
+    document.getElementById("elaModal");
+
+const showElaBtn =
+    document.getElementById("showElaBtn");
+
+const closeModal =
+    document.getElementById("closeModal");
+
+const elaAvatar =
+    document.getElementById("elaAvatar");
+
+const avatarLoader =
+    document.getElementById("avatarLoader");
+
+const avatarError =
+    document.getElementById("avatarError");
+
+function openModal(){
+
+    elaModal.classList.add("active");
+    document.body.classList.add("modal-open");
+
+}
+
+function closeEla(){
+
+    elaModal.classList.remove("active");
+    document.body.classList.remove("modal-open");
+
+}
+
+showElaBtn.addEventListener(
+    "click",
+    openModal
+);
+
+closeModal.addEventListener(
+    "click",
+    closeEla
+);
+
+elaModal.addEventListener("click",(event)=>{
+
+    if(event.target === elaModal){
+
+        closeEla();
+
+    }
+
+});
+
+document.addEventListener("keydown",(event)=>{
+
+    if(event.key === "Escape"){
+
+        closeEla();
+
+    }
+
+});
+
+
+/* =========================
+   FOTO DURUMU
+========================= */
+
+elaAvatar.addEventListener("load",()=>{
+
+    avatarLoader.classList.add("hidden");
+    avatarError.classList.remove("show");
+
+});
+
+elaAvatar.addEventListener("error",()=>{
+
+    avatarLoader.classList.add("hidden");
+    avatarError.classList.add("show");
+
+});
+
+
+/* =========================
+   SCROLL ANİMASYONLARI
+========================= */
+
+const observer =
+    new IntersectionObserver(
+        entries=>{
+
+            entries.forEach(entry=>{
+
+                if(entry.isIntersecting){
+
+                    entry.target.classList.add("visible");
+
+                    observer.unobserve(
+                        entry.target
+                    );
+
+                }
+
+            });
+
+        },
+        {
+            threshold:.12
+        }
+    );
+
+document
+    .querySelectorAll(".reveal")
+    .forEach(element=>{
+
+        observer.observe(element);
+
+    });
+
+
+/* =========================
+   BAŞLANGIÇ
+========================= */
+
+updateSaved();
+renderCollection();
+loadCat();
+
+</script>
+
+</body>
+</html>
